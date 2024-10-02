@@ -1,0 +1,58 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  color: #000000;
+  background: #FFFFFF;
+}
+
+a,
+.link {
+  font-weight: 600;
+  transition: all 0.3s ease-out;
+  cursor: pointer;
+  color: inherit;
+}
+
+.link {
+  line-height: 4.5em;
+  position: relative;
+  display: inline-block;
+}
+
+.link,
+.link:hover,
+.link:focus,
+.link:active {
+  text-decoration: none;
+}
+
+.link::after {
+  content: "";
+  position: absolute;
+  top: 65%;
+  left: 0%;
+  height: 2px;
+  width: 0%;
+  transition: 0.3s ease all;
+  background-color: black;
+}
+.link.white::after {
+  background-color: white;
+}
+.link.secondary::after {
+width: 70%;
+}
+
+.link:hover::after,
+.link.selected::after {
+  width: 100%;
+}
+
+@layer base {
+  :root {
+    --radius: 0.5rem;
+  }
+}
+
