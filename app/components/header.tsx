@@ -7,17 +7,20 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Button } from "./button";
 
 export const Header = () => (
   <header className="sm:px-6 px-2 bg-black flex items-center justify-between sm:gap-16 gap-6 py-2">
     <div className="flex items-center sm:gap-16 gap-6">
-      <Image
-        src="/allo-logo.svg"
-        alt="Allo logo"
-        width={74}
-        height={20}
-        className="sm:max-h-none max-h-[15px] w-auto"
-      />
+      <Link href="https://allo.gitcoin.co/" target="_blank">
+        <Image
+          src="/allo-logo.svg"
+          alt="Allo logo"
+          width={74}
+          height={20}
+          className="sm:max-h-none max-h-[15px] w-auto"
+        />
+      </Link>
       <div className="sm:hidden">
         <DropdownMenu>
           <DropdownMenuTrigger className="text-white font-semibold">
@@ -29,7 +32,7 @@ export const Header = () => (
           <DropdownMenuContent className="bg-black">
             <DropdownMenuItem>
               <Link
-                href="https://alloexperts.gitcoin.co"
+                href="https://allo.expert"
                 target="_blank"
                 className="w-full"
               >
@@ -52,7 +55,7 @@ export const Header = () => (
         <ul className="font-semibold flex items-center sm:gap-8 gap-4 text-white">
           <li>
             <Link
-              href="https://alloexperts.gitcoin.co"
+              href="https://allo.expert"
               target="_blank"
               className="link white"
             >
@@ -76,6 +79,9 @@ export const Header = () => (
         </ul>
       </nav>
     </div>
-    <ConnectButton />
+    <div className="flex items-center gap-2">
+      <Link href="https://t.me/+eY1-8OcToHI3ZWJh" target="_blank"><Button type="secondary">Join Telegram</Button></Link>
+      <ConnectButton />
+    </div>
   </header>
 );
