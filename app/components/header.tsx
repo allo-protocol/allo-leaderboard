@@ -80,7 +80,7 @@ export const Header = () => (
       </nav>
     </div>
     <div className="flex items-center gap-2">
-      <Link href="https://t.me/+eY1-8OcToHI3ZWJh" target="_blank"><Button type="secondary">Join Telegram</Button></Link>
+      <Link href="https://t.me/+eY1-8OcToHI3ZWJh" target="_blank"><Button className="!py-3" type="secondary">Join Telegram</Button></Link>
       <ConnectButton />
     </div>
   </header>
