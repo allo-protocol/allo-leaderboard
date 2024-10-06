@@ -178,7 +178,7 @@ const CheckBalance = ({
           Congratulations!
         </h1>
         <p className="text-2xl text-white mb-2">
-          You have {formatNumber(points)} points
+          You have {formatNumber(points)} GMV
         </p>
         <button
           className="font-medium text-blue-200 underline mr-auto"
