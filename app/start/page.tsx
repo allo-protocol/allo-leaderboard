@@ -184,7 +184,7 @@ const CheckBalance = ({
           className="font-medium text-blue-200 underline mr-auto"
           onClick={openPointsBreakdownModal}
         >
-          See points breakdown
+          See GMV breakdown
         </button>
       </div>
       <div className="relative">
@@ -219,12 +219,12 @@ const CheckBalance = ({
         <h1 className="text-4xl text-yellow-500 font-semibold font-founders mb-2">
           :(
         </h1>
-        <p className="text-2xl text-white mb-2">You have {points} points</p>
+        <p className="text-2xl text-white mb-2">You have {points} GMV</p>
         <button
           className="font-medium text-blue-200 underline mr-auto"
           onClick={scrollToFaq}
         >
-          How to earn points
+          How to earn GMV
         </button>
       </div>
       <div className="relative">
@@ -278,7 +278,7 @@ const CheckBalance = ({
                 isLoading={isDataLoading}
                 className="sm:w-auto w-full"
               >
-                Check points
+                Check GMV
               </Button>
             </form>
             <p className="text-sm text-grey-100">
@@ -336,7 +336,7 @@ const BreakdownModal = ({
       <div>
         <div className="mb-12 flex items-center justify-between">
           <h1 className="text-2xl sm:text-4xl text-blue-800 font-semibold font-founders leading-relaxed">
-            Points <br />
+            GMV <br />
             breakdown
           </h1>
           <div className="relative">
@@ -490,7 +490,7 @@ const Leaderboard = ({
                 />
               </div>
               <p className="sm:text-xl flex-shrink-0 font-founders">
-                {formatNumber(entry.numberOfPoints)} pts
+                {formatNumber(entry.numberOfPoints)} GMV
               </p>
             </div>
           ))
@@ -519,7 +519,7 @@ const Leaderboard = ({
 const Faq = () => {
   const faqs = [
     {
-      question: "What can you do with Allo points?",
+      question: "What can you do with Allo GMV?",
       response: "Nothing Yet, But Stay Tooned!",
     },
     {
@@ -535,9 +535,9 @@ const Faq = () => {
       response: "Go to xyz.xyz and apply today. . ",
     },
     {
-      question: "How do you Earn Points?",
+      question: "How do you Earn GMV?",
       response:
-        "Every $1 spent on Allo equals approximately 5 points. 1 point for the round operator, 1 for the grant owner, 1 for the contributor, allo contract dev and 1 for the network it was run on",
+        "Every $1 spent on Allo equals approximately 5 GMV. 1 point for the round operator, 1 for the grant owner, 1 for the contributor, allo contract dev and 1 for the network it was run on",
     },
   ];
   return (

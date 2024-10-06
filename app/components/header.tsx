@@ -10,8 +10,8 @@ import {
 import { Button } from "./button";
 
 export const Header = () => (
-  <header className="sm:px-6 px-2 bg-black flex items-center justify-between sm:gap-16 gap-6 py-2">
-    <div className="flex items-center sm:gap-16 gap-6">
+  <header className="sm:px-6 px-2 bg-black flex items-center justify-between sm:gap-16 gap-4 py-2">
+    <div className="flex items-center sm:gap-16 gap-2.5">
       <Link href="https://allo.gitcoin.co/" target="_blank">
         <Image
           src="/allo-logo.svg"
