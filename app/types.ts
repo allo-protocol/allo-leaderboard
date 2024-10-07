@@ -27,3 +27,13 @@ export interface PointsBreakdownItem {
   role: Role;
   timestamp: string;
 }
+
+ export type PointsBreakdownItemDTO = {
+   address: string;
+   blockchain: string;
+   ens: string;
+   number_of_points: number;
+   tx_hash: string;
+   role: Role;
+   timestamp: string;
+ };

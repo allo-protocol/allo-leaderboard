@@ -16,10 +16,7 @@ import {
   Role,
 } from "../types";
 import { useLeaderboard } from "../hooks/useLeaderboard";
-import {
-  LEADERBOARD_PAGE_SIZE,
-  POINTS_BREAKDOWN_PAGE_SIZE,
-} from "../constants";
+import { LEADERBOARD_PAGE_SIZE } from "../constants";
 import { Input } from "../components/input";
 import { usePointsBreakdown } from "../hooks/usePointsBreakdown";
 import { Tooltip } from "react-tooltip";
@@ -31,7 +28,6 @@ export default function Start() {
   const [isDataLoading, setIsDataLoading] = useState(false);
   const [isPointsBreakdownModalOpen, setIsPointsBreakdownModalOpen] =
     useState(false);
-  const [points, setPoints] = useState<number>();
   const faqRef = useRef<HTMLElement | null>(null);
 
   const [leaderboardSelectedPage, setLeaderboardSelectedPage] = useState(1);
@@ -47,6 +43,7 @@ export default function Start() {
   const [pointsBreakdownSelectedPage, setPointsBreakdownSelectedPage] =
     useState(1);
   const {
+    totalPoints,
     getPointBreakdownByAddress,
     isLoading: isPointsBreakdownLoading,
     pointsBreakdown,
@@ -55,32 +52,7 @@ export default function Start() {
   } = usePointsBreakdown(pointsBreakdownSelectedPage, address);
 
   const getPointsByAddress = async (address: string) => {
-    const options = {
-      method: "GET",
-      headers: {
-        "X-DUNE-API-KEY": process.env.NEXT_PUBLIC_DUNE_API_KEY ?? "",
-      },
-    };
-
-    let queryParams: any;
-    if (isAddress(address))
-      queryParams = { ...queryParams, filters: `address =  '${address}'` };
-    else queryParams = { ...queryParams, filters: `ens = '${address}'` };
-
-    const queryId = process.env.NEXT_PUBLIC_LEADERBOARD_API;
-    const url = `https://api.dune.com/api/v1/query/${queryId}/results?${new URLSearchParams(
-      queryParams
-    ).toString()}`;
-
-    const resp = await fetch(url, options);
-    if (!resp.ok) {
-      throw new Error(resp.statusText);
-    }
-    const results = await resp.json();
-
-    const points = (results?.result?.rows[0]?.total_points as number) ?? 0;
-    setPoints(points);
-    !!points && (await getPointBreakdownByAddress(address));
+    await getPointBreakdownByAddress(address);
   };
 
   const checkPoints = async (address: string) => {
@@ -108,7 +80,7 @@ export default function Start() {
       <CheckBalance
         openPointsBreakdownModal={() => setIsPointsBreakdownModalOpen(true)}
         address={address}
-        points={points}
+        points={totalPoints}
         setAddress={setAddress}
         scrollToFaq={scrollToFaq}
         checkPoints={checkPoints}
@@ -140,7 +112,7 @@ export default function Start() {
       {/* modals */}
       <BreakdownModal
         data={pointsBreakdown}
-        totalPointsNumber={points ?? 0}
+        totalPointsNumber={totalPoints ?? 0}
         isDataLoading={isPointsBreakdownLoading}
         pointBreakdownTotalEntries={pointBreakdownTotalEntries ?? 0}
         setIsPointsBreakdownModalOpen={setIsPointsBreakdownModalOpen}
