@@ -491,25 +491,29 @@ const Leaderboard = ({
 const Faq = () => {
   const faqs = [
     {
-      question: "What can you do with Allo GMV?",
-      response: "Nothing Yet, But Stay Tooned!",
+      question: "What is GMV?",
+      response: "GMV stands for Gross Marketplace Value - its basically a measure of how much $$$ has gone through Allo.",
+    },
+    {
+      question: "What does Allo Leaderboard track?",
+      response: "Anyone who has created GMV on Allo as a software developer, L2 network, round operator, grant creator, or grant contributor, will be tracked through this resource.",
     },
     {
       question: "What apps can I use on Allo?",
-      response: "Go to xyz.xyz and view the allo app directory.",
+      response: "Go to https://github.com/allo-protocol/awesome-allo-protocol and view the allo app directory.",
     },
     {
       question: "How can I build on Allo?",
-      response: "Go to docs.allo.gitcoin.co and  start building",
+      response: "Go to docs.allo.gitcoin.co and start building",
     },
     {
-      question: "How can I join the Gitcoin ciztiens/ Allo Accelerator",
-      response: "Go to xyz.xyz and apply today. . ",
+      question: "Why do I care about creating GMV on Allo?",
+      response: "If you believe in Gitcoin's mission of 'Funding What Matters', then Allo Leaderboard is a measure of how much you've contributed to that.   If you believe there might be future retroactive airdrops to creators of Allo Gmv, then you might care. . ",
     },
     {
-      question: "How do you Earn GMV?",
+      question: "How do you earn a spot on the leaderboard?",
       response:
-        "Every $1 spent on Allo equals approximately 5 GMV. 1 point for the round operator, 1 for the grant owner, 1 for the contributor, allo contract dev and 1 for the network it was run on",
+        "Every $1 spent on Allo equals approximately 5 $$$ allocated to the leaderboard. 1 point for the round operator, 1 for the grant owner, 1 for the contributor, allo contract dev and 1 for the network it was run on",
     },
   ];
   return (
