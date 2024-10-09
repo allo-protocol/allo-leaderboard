@@ -508,7 +508,7 @@ const Faq = () => {
     },
     {
       question: "Why do I care about creating GMV on Allo?",
-      response: "If you believe in Gitcoin's mission of 'Funding What Matters', then Allo Leaderboard is a measure of how much you've contributed to that.   If you believe there might be future retroactive airdrops to creators of Allo Gmv, then you might care. . ",
+      response: "If you believe in Gitcoins mission of Funding What Matters, then Allo Leaderboard is a measure of how much youve contributed to that.   If you believe there might be future retroactive airdrops to creators of Allo Gmv, then you might care. . ",
     },
     {
       question: "How do you earn a spot on the leaderboard?",
