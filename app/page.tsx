@@ -13,7 +13,7 @@ export default function Home() {
               <span className="font-light">Leaderboard</span>
             </h1>
             <h3 className="text-blue-800 text-xl">
-              Allo Protocol is Gitcoin's capital allocation protocol.  Use this resource to track how much $$$ you've personally contribnuted to the growth of Allo Protocol.
+              Allo Protocol is Gitcoins capital allocation protocol.  Use this resource to track how much $$$ youve personally contributed to the growth of Allo Protocol.
             </h3>
             <div className="w-fit">
               <Link href="/start">
