@@ -18,7 +18,7 @@ export const Header = () => (
           alt="Allo logo"
           width={74}
           height={20}
-          className="sm:max-h-none max-h-[15px] w-auto"
+          className="sm:max-h-none max-h-[15px] sm:w-[74px] w-auto"
         />
       </Link>
       <div className="sm:hidden">
