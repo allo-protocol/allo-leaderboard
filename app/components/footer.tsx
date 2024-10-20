@@ -18,7 +18,7 @@ export const Footer = () => (
         <nav>
           <ul className="font-semibold flex items-center gap-8">
             <li>
-              <Link href="https://allo.expert" target="_blank" className="link">
+              <Link href="https://allo.expert" className="link">
                 Experts
               </Link>
             </li>
@@ -28,11 +28,7 @@ export const Footer = () => (
               </Link>
             </li>
             <li>
-              <Link
-                href="https://allobook.gitcoin.co/"
-                target="_blank"
-                className="link"
-              >
+              <Link href="https://allobook.gitcoin.co/" className="link">
                 Book
               </Link>
             </li>
