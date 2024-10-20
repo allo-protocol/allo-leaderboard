@@ -7,6 +7,7 @@ import { Providers } from "./providers";
 import { Header } from "./components/header";
 import localFont from "next/font/local";
 import { Footer } from "./components/footer";
+import GoogleAnalytics from "./components/google-analytics";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -50,6 +51,7 @@ export default function RootLayout({
       lang="en"
       className={`${founders.variable} ${mono.variable} font-sans`}
     >
+      <GoogleAnalytics />
       <body className={inter.className}>
         <Providers>
           <Header />
