@@ -31,20 +31,12 @@ export const Header = () => (
           </DropdownMenuTrigger>
           <DropdownMenuContent className="bg-black">
             <DropdownMenuItem>
-              <Link
-                href="https://allo.expert"
-                target="_blank"
-                className="w-full"
-              >
+              <Link href="https://allo.expert" className="w-full">
                 Experts
               </Link>
             </DropdownMenuItem>
             <DropdownMenuItem>
-              <Link
-                href="https://allobook.gitcoin.co/"
-                target="_blank"
-                className="w-full"
-              >
+              <Link href="https://allobook.gitcoin.co/" className="w-full">
                 Book
               </Link>
             </DropdownMenuItem>
@@ -54,11 +46,7 @@ export const Header = () => (
       <nav className="sm:block hidden">
         <ul className="font-semibold flex items-center sm:gap-8 gap-4 text-white">
           <li>
-            <Link
-              href="https://allo.expert"
-              target="_blank"
-              className="link white"
-            >
+            <Link href="https://allo.expert" className="link white">
               Experts
             </Link>
           </li>
@@ -68,11 +56,7 @@ export const Header = () => (
             </Link>
           </li>
           <li>
-            <Link
-              href="https://allobook.gitcoin.co/"
-              target="_blank"
-              className="link white"
-            >
+            <Link href="https://allobook.gitcoin.co/" className="link white">
               Book
             </Link>
           </li>
@@ -80,7 +64,11 @@ export const Header = () => (
       </nav>
     </div>
     <div className="flex items-center gap-2">
-      <Link href="https://t.me/+eY1-8OcToHI3ZWJh" target="_blank"><Button className="!py-3" type="secondary">Join Telegram</Button></Link>
+      <Link href="https://t.me/+eY1-8OcToHI3ZWJh" target="_blank">
+        <Button className="!py-3" type="secondary">
+          Join Telegram
+        </Button>
+      </Link>
       <ConnectButton />
     </div>
   </header>
