@@ -5,7 +5,7 @@ export const Footer = () => (
   <div className="mt-20 relative bg-footer-gradient-bg sm:px-6 px-2 bg-top bg-cover ">
     <footer className="py-10">
       <div className="flex sm:flex-row flex-col items-center gap-10">
-        <Link href="https://allo.gitcoin.co/" target="_blank">
+        <Link href="https://allo.expert/" target="_blank">
           <Image
             className="max-h-[20px] w-auto"
             src="/allo-logo-black.svg"
