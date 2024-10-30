@@ -18,8 +18,8 @@ export const usePointsBreakdown = (currentPage: number, address?: string) => {
 
     let queryParams = {};
     queryParams = isAddress(address)
-      ? { lookup_address: address }
-      : { lookup_ens: address, lookup_address: "0x0" };
+      ? { lookup_address: address.toLowerCase() }
+      : { lookup_ens: address.toLowerCase(), lookup_address: "0x0" };
 
     try {
       const response = await fetch(
