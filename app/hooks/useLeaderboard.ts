@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { LeaderboardFilter, LeaderboardItem } from "../types";
 import { LEADERBOARD_PAGE_SIZE } from "../constants";
-import { DuneClient, QueryParameter } from "@duneanalytics/client-sdk";
 
 export const useLeaderboard = (leaderboardSelectedPage: number) => {
   const [leaderboardTotalResults, setLeaderboardTotalResults] =
@@ -28,30 +27,31 @@ export const useLeaderboard = (leaderboardSelectedPage: number) => {
     LeaderboardFilter.LAST_WEEK
   );
 
-  async function getLeaderboardData(offset: number) {
+  async function getLeaderboardData(page: number) {
+    const queryParams = {
+      page: page.toString(),
+      limit: LEADERBOARD_PAGE_SIZE.toString(),
+      time_range: selectedFilter,
+    };
+
+    const BASE_URL = "/api/leaderboard";
     setIsLeaderboardLoading(true);
     try {
-      const client = new DuneClient(process.env.NEXT_PUBLIC_DUNE_API_KEY ?? "");
-      const queryId = Number(process.env.NEXT_PUBLIC_LEADERBOARD_API ?? "");
-
-      const results = await client.runQuery({
-        queryId,
-        limit: LEADERBOARD_PAGE_SIZE,
-        offset,
-        query_parameters: [
-          QueryParameter.enum("time_range", `${selectedFilter}`),
-        ],
-      });
-
-      const totalEntries = results?.result?.metadata?.total_row_count ?? 0;
+      const response = await fetch(
+        `${BASE_URL}?${new URLSearchParams(queryParams).toString()}`
+      );
+      if (!response.ok) throw new Error(response.statusText);
+      const data = await response.json();
+      console.log(data);
+      const totalEntries = data?.length ? data[0].total_records ?? 0 : 0;
       setLeaderboardTotalResults(totalEntries);
 
       setLeaderboardData(
-        results?.result?.rows?.map((row: any) => ({
+        data?.map((row: any) => ({
           rank: row.rank,
           address: row.address,
-          ens: row.ens,
-          numberOfPoints: row.total_points,
+          ens: row.name,
+          numberOfPoints: row.total_gmv,
           lastUpdated: row.last_timestamp,
         })) ?? []
       );
@@ -63,7 +63,7 @@ export const useLeaderboard = (leaderboardSelectedPage: number) => {
   }
 
   useEffect(() => {
-    getLeaderboardData((leaderboardSelectedPage - 1) * LEADERBOARD_PAGE_SIZE);
+    getLeaderboardData(leaderboardSelectedPage);
   }, [leaderboardSelectedPage, selectedFilter]);
 
   return {
