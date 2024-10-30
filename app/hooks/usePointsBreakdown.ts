@@ -13,13 +13,15 @@ export const usePointsBreakdown = (currentPage: number, address?: string) => {
   const [totalPoints, setTotalPoints] = useState<number>();
 
   const getPointBreakdownByAddress = async (address: string) => {
+    const lowercaseAddress = address.toLowerCase();
+
     setIsLoading(true);
     const EVENTS_URL = "/api/events";
 
     let queryParams = {};
-    queryParams = isAddress(address)
-      ? { lookup_address: address.toLowerCase() }
-      : { lookup_ens: address.toLowerCase(), lookup_address: "0x0" };
+    queryParams = isAddress(lowercaseAddress)
+      ? { lookup_address: lowercaseAddress }
+      : { lookup_ens: lowercaseAddress, lookup_address: "0x0" };
 
     try {
       const response = await fetch(
