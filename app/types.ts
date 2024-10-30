@@ -15,10 +15,10 @@ export enum LeaderboardFilter {
 export enum Role {
   COTRACT_DEV = "contract_dev",
   GRANTEE = "grantee",
-  CONTRIBUTOR = "contributor",
-  ROUND_OPERATOR = "round_operator",
   DONOR = "donor",
-  MANAGER = "manager"
+  ROUND_OPERATOR = "round_operator",
+  MANAGER = "manager",
+  CONTRIBUTOR = "contributor",
 }
 
 export interface PointsBreakdownItem {
