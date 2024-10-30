@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { PointsBreakdownItem, PointsBreakdownItemDTO } from "../types";
-import { DuneClient, QueryParameter } from "@duneanalytics/client-sdk";
+import { isAddress } from "viem";
 
 export const usePointsBreakdown = (currentPage: number, address?: string) => {
   const [pointsBreakdownCurrentPage, setPointsBreakdownCurrentPage] =
@@ -14,32 +14,39 @@ export const usePointsBreakdown = (currentPage: number, address?: string) => {
 
   const getPointBreakdownByAddress = async (address: string) => {
     setIsLoading(true);
+    const EVENTS_URL = "/api/events";
+
+    let queryParams = {};
+    queryParams = isAddress(address)
+      ? { lookup_address: address }
+      : { lookup_ens: address, lookup_address: "0x0" };
 
     try {
-      const client = new DuneClient(process.env.NEXT_PUBLIC_DUNE_API_KEY ?? "");
-      const queryId = Number(process.env.NEXT_PUBLIC_POINTS_EVENTS_API ?? "");
-
-      const results = await client.runQuery({
-        queryId,
-        query_parameters: [QueryParameter.text("lookup_address", `${address}`)],
-      });
-      const rows = results.result?.rows as PointsBreakdownItemDTO[];
+      const response = await fetch(
+        `${EVENTS_URL}?${new URLSearchParams(queryParams).toString()}`
+      );
+      if (!response.ok) throw new Error(response.statusText);
+      const result = await response.json();
+      console.log(result);
+      const rows = result as PointsBreakdownItemDTO[];
       const data = rows?.map((entry: any) => ({
         address: entry.address,
         blockchain: entry.blockchain,
-        ens: entry.ens,
-        numberOfPoints: entry.number_of_points,
+        ens: entry.name,
+        numberOfPoints: entry.gmv,
         txHash: entry.tx_hash,
         role: entry.role,
         timestamp: entry.tx_timestamp,
       }));
-      const totalEntries = results?.result?.metadata?.total_row_count ?? 0;
+      console.log(data);
+      const totalEntries = rows.length ?? 0;
       const points = rows?.reduce(
         (accumulator, currentValue) =>
-          accumulator + Number(currentValue.number_of_points),
+          accumulator + Number(currentValue.gmv),
         0
       );
       setTotalPoints(points);
+      console.log(points);
       setTotalResults(totalEntries);
       setPointsBreakdown(data ?? []);
     } catch (err) {

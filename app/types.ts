@@ -17,6 +17,8 @@ export enum Role {
   GRANTEE = "grantee",
   CONTRIBUTOR = "contributor",
   ROUND_OPERATOR = "round_operator",
+  DONOR = "donor",
+  MANAGER = "manager"
 }
 
 export interface PointsBreakdownItem {
@@ -32,7 +34,7 @@ export interface PointsBreakdownItem {
    address: string;
    blockchain: string;
    ens: string;
-   number_of_points: number;
+   gmv: number;
    tx_hash: string;
    role: Role;
    timestamp: string;

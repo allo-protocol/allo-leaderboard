@@ -4,10 +4,7 @@ import { Button } from "../components/button";
 import InfoModal from "../components/modal";
 import Image from "next/image";
 import { useAccount } from "wagmi";
-import { isAddress } from "viem";
-import { CustomAPIParams, DuneClient } from "@duneanalytics/client-sdk";
 import Pagination from "../components/pagination";
-import { Footer } from "../components/footer";
 import { formatNumber } from "../components/helpers";
 import {
   LeaderboardFilter,
@@ -297,6 +294,10 @@ const BreakdownModal = ({
         return "grantee";
       case Role.ROUND_OPERATOR:
         return "round operator";
+      case Role.DONOR:
+        return "donor";
+      case Role.MANAGER:
+        return "manager";
     }
   };
 
@@ -333,13 +334,13 @@ const BreakdownModal = ({
             </>
           ) : (
             <div>
-              {data.map((entry) => (
+              {data.map((entry, index) => (
                 <div className="" key={entry.txHash}>
                   <span className="text-grey-400 mr-2">
-                    {new Date(entry.timestamp).toDateString()}
+                    {index + 1}. {new Date(entry.timestamp).toDateString()}
                   </span>
                   <span className="text-blue-800 font-medium">
-                    {formatNumber(entry.numberOfPoints)} pts -{" "}
+                    {formatNumber(entry.numberOfPoints)} GMV -{" "}
                     {getActionFromRole(entry.role)}
                   </span>
                 </div>
