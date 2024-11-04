@@ -54,7 +54,7 @@ export default function InfoModal({
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95"
             >
-              <DialogPanel className="w-full max-w-lg transform overflow-hidden rounded-2xl bg-white border border-blue-800 sm:px-16 sm:py-10 p-6 text-left align-middle shadow-xl transition-all">
+              <DialogPanel className="w-full max-w-4xl transform overflow-hidden rounded-2xl bg-white border border-blue-800 sm:px-16 sm:py-10 p-6 text-left align-middle shadow-xl transition-all">
                 {children}
               </DialogPanel>
             </TransitionChild>

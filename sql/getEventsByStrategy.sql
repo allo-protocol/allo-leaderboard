@@ -1,21 +1,17 @@
 SELECT 
     name 
     , address
-    , gmv
-    , role
-    , tx_timestamp
-    , tx_hash
-    , blockchain
+    , strategy_name
+    , sum(gmv) as gmv
+
 FROM 
     experimental_views.allo_gmv_leaderboard_events ap
 WHERE 
     (
-        address = $1
+        address = LOWER($1)
     ) 
     OR 
     (
          name = $2
     )
-ORDER BY 
-    tx_timestamp DESC;
-    
+GROUP BY name, address, strategy_name

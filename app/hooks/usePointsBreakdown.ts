@@ -1,5 +1,11 @@
 import { useState } from "react";
-import { PointsBreakdownItem, PointsBreakdownItemDTO } from "../types";
+import {
+  PointsBreakdownItem,
+  PointsBreakdownItemByRoleDTO,
+  PointsBreakdownItemByStrategyDTO,
+  PointsBreakdownItemByTimeDTO,
+  PointsBreakdownItemDTO,
+} from "../types";
 import { isAddress } from "viem";
 
 export const usePointsBreakdown = (currentPage: number, address?: string) => {
@@ -9,6 +15,15 @@ export const usePointsBreakdown = (currentPage: number, address?: string) => {
   const [pointsBreakdown, setPointsBreakdown] = useState<PointsBreakdownItem[]>(
     []
   );
+  const [pointsBreakdownByRole, setPointsBreakdownByRole] = useState<
+    PointsBreakdownItemByRoleDTO[]
+  >([]);
+  const [pointsBreakdownByStrategy, setPointsBreakdownByStrategy] = useState<
+    PointsBreakdownItemByStrategyDTO[]
+  >([]);
+  const [pointsBreakdownByTime, setPointsBreakdownByTime] = useState<
+    PointsBreakdownItemByTimeDTO[]
+  >([]);
   const [totalResults, setTotalResults] = useState<number>();
   const [totalPoints, setTotalPoints] = useState<number>();
 
@@ -29,8 +44,11 @@ export const usePointsBreakdown = (currentPage: number, address?: string) => {
       );
       if (!response.ok) throw new Error(response.statusText);
       const result = await response.json();
-      console.log(result);
-      const rows = result as PointsBreakdownItemDTO[];
+      const rowsByRole = result.dataByRole as PointsBreakdownItemByRoleDTO[];
+      const rowsByTime = result.dataByTime as PointsBreakdownItemByTimeDTO[];
+      const rowsByStrategy =
+        result.dataByStrategy as PointsBreakdownItemByStrategyDTO[];
+      const rows = result.data as PointsBreakdownItemDTO[];
       const data = rows?.map((entry: any) => ({
         address: entry.address,
         blockchain: entry.blockchain,
@@ -40,15 +58,15 @@ export const usePointsBreakdown = (currentPage: number, address?: string) => {
         role: entry.role,
         timestamp: entry.tx_timestamp,
       }));
-      console.log(data);
       const totalEntries = rows.length ?? 0;
       const points = rows?.reduce(
-        (accumulator, currentValue) =>
-          accumulator + Number(currentValue.gmv),
+        (accumulator, currentValue) => accumulator + Number(currentValue.gmv),
         0
       );
       setTotalPoints(points);
-      console.log(points);
+      setPointsBreakdownByRole(rowsByRole);
+      setPointsBreakdownByTime(rowsByTime);
+      setPointsBreakdownByStrategy(rowsByStrategy);
       setTotalResults(totalEntries);
       setPointsBreakdown(data ?? []);
     } catch (err) {
@@ -62,6 +80,9 @@ export const usePointsBreakdown = (currentPage: number, address?: string) => {
     getPointBreakdownByAddress,
     isLoading,
     pointsBreakdown,
+    pointsBreakdownByRole,
+    pointsBreakdownByStrategy,
+    pointsBreakdownByTime,
     totalResults,
     pointsBreakdownCurrentPage,
     totalPoints,
