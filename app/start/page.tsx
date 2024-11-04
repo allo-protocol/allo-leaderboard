@@ -7,7 +7,6 @@ import { useAccount } from "wagmi";
 import Pagination from "../components/pagination";
 import { formatNumber } from "../components/helpers";
 import {
-  getRoundStrategyTitle,
   getRoundStrategyType,
   LeaderboardFilter,
   LeaderboardItem,
