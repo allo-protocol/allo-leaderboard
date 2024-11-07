@@ -13,12 +13,7 @@ export default function Home() {
               <span className="font-light">Leaderboard</span>
             </h1>
             <h3 className="text-blue-800 text-xl">
-              Short intro about what are allo points, how to get them, what they
-              are useful for and that’s it. Short intro about what are allo
-              points, how to get them, what they are useful for and that’s it.
-              Short intro about what are allo points, how to get them, what they
-              are useful for and that’s it. Short intro about what are allo
-              points, how to get them, what they are useful for and that’s it.
+              Allo Protocol is Gitcoins capital allocation protocol.  Use this resource to track how much $$$ youve personally contributed to the growth of Allo Protocol.
             </h3>
             <div className="w-fit">
               <Link href="/start">
