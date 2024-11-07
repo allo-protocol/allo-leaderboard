@@ -10,6 +10,9 @@ import {
   LeaderboardFilter,
   LeaderboardItem,
   PointsBreakdownItem,
+  PointsBreakdownItemByRoleDTO,
+  PointsBreakdownItemByStrategyDTO,
+  PointsBreakdownItemByTimeDTO,
   Role,
 } from "../types";
 import { useLeaderboard } from "../hooks/useLeaderboard";
@@ -17,10 +20,23 @@ import { LEADERBOARD_PAGE_SIZE } from "../constants";
 import { Input } from "../components/input";
 import { usePointsBreakdown } from "../hooks/usePointsBreakdown";
 import { Tooltip } from "react-tooltip";
+import {
+  LineChart,
+  Line,
+  Tooltip as ChartTooltip,
+  BarChart,
+  CartesianGrid,
+  XAxis,
+  YAxis,
+  Bar,
+  ComposedChart,
+  ResponsiveContainer,
+} from "recharts";
+import { Legend } from "@headlessui/react";
 
 export default function Start() {
   const { isConnected, address: userAddress } = useAccount();
-  const [address, setAddress] = useState<string>();
+  const [address, setAddress] = useState<string | undefined>("");
 
   const [isDataLoading, setIsDataLoading] = useState(false);
   const [isPointsBreakdownModalOpen, setIsPointsBreakdownModalOpen] =
@@ -44,6 +60,9 @@ export default function Start() {
     getPointBreakdownByAddress,
     isLoading: isPointsBreakdownLoading,
     pointsBreakdown,
+    pointsBreakdownByRole,
+    pointsBreakdownByStrategy,
+    pointsBreakdownByTime,
     totalResults: pointBreakdownTotalEntries,
     pointsBreakdownCurrentPage,
   } = usePointsBreakdown(pointsBreakdownSelectedPage, address);
@@ -61,7 +80,7 @@ export default function Start() {
   useEffect(() => {
     async function autoCheckConnectedUser() {
       if (isConnected) {
-        setAddress(userAddress);
+        setAddress(userAddress as string);
         await checkPoints(userAddress as string);
       }
     }
@@ -108,6 +127,9 @@ export default function Start() {
 
       {/* modals */}
       <BreakdownModal
+        dataByRole={pointsBreakdownByRole}
+        dataByStrategy={pointsBreakdownByStrategy}
+        dataByTime={pointsBreakdownByTime}
         data={pointsBreakdown}
         totalPointsNumber={totalPoints ?? 0}
         isDataLoading={isPointsBreakdownLoading}
@@ -230,6 +252,7 @@ const CheckBalance = ({
           <h1 className="text-4xl text-blue-200 font-semibold font-founders">
             Check your balance
           </h1>
+
           <div>
             <form className="flex items-center gap-3 mb-3 w-full sm:flex-row flex-col">
               <Input
@@ -268,6 +291,9 @@ const CheckBalance = ({
 const BreakdownModal = ({
   data,
   totalPointsNumber,
+  dataByRole,
+  dataByStrategy,
+  dataByTime,
   isPointsBreakdownModalOpen,
   setIsPointsBreakdownModalOpen,
   isDataLoading,
@@ -276,6 +302,9 @@ const BreakdownModal = ({
   handlePageChange,
 }: {
   data: PointsBreakdownItem[];
+  dataByRole: PointsBreakdownItemByRoleDTO[];
+  dataByStrategy: PointsBreakdownItemByStrategyDTO[];
+  dataByTime: PointsBreakdownItemByTimeDTO[];
   totalPointsNumber: number;
   isPointsBreakdownModalOpen: boolean;
   setIsPointsBreakdownModalOpen: Dispatch<SetStateAction<boolean>>;
@@ -287,18 +316,123 @@ const BreakdownModal = ({
   const getActionFromRole = (role: Role) => {
     switch (role) {
       case Role.CONTRIBUTOR:
-        return "contributor";
+        return "Contributor";
       case Role.COTRACT_DEV:
-        return "contract dev";
+        return "Contract dev";
       case Role.GRANTEE:
-        return "grantee";
+        return "Grantee";
       case Role.ROUND_OPERATOR:
-        return "round operator";
+        return "Round operator";
       case Role.DONOR:
-        return "donor";
+        return "Donor";
       case Role.MANAGER:
-        return "manager";
+        return "Manager";
     }
+  };
+
+  const barDataByRole = dataByRole.map((entry) => ({
+    role: getActionFromRole(entry.role),
+    gmv: Math.round(Number(entry.gmv)),
+  }));
+
+  const barDataByStrategyMapByStrategy: Map<
+    string,
+    { strategy: string; gmv: number }
+  > = new Map();
+  dataByStrategy.forEach((entry) => {
+    if (barDataByStrategyMapByStrategy.has(entry.mapped_strategy)) {
+      const prevGmv =
+        barDataByStrategyMapByStrategy.get(entry.mapped_strategy)?.gmv ?? 0;
+      barDataByStrategyMapByStrategy.set(entry.mapped_strategy, {
+        strategy: entry.mapped_strategy,
+        gmv: Math.round(Number(prevGmv + entry.gmv)),
+      });
+    } else {
+      barDataByStrategyMapByStrategy.set(entry.mapped_strategy, {
+        strategy: entry.mapped_strategy,
+        gmv: Math.round(Number(entry.gmv)),
+      });
+    }
+  });
+  console.log(dataByStrategy);
+  const barDataByStrategy = Array.from(barDataByStrategyMapByStrategy.values());
+
+  const monthNames = [
+    "Jan",
+    "Febr",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sept",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
+
+  const weekTickFormatter = (tick: any) => {
+    return "";
+  };
+
+  const barDataByTime = dataByTime.map((entry, index) => {
+    return {
+      week: entry.week,
+      gmv: Math.round(entry.gmv),
+      "cumulative gmv": Math.round(entry.cumulative_gmv),
+    };
+  });
+
+  const renderQuarterTick = (tickProps: any) => {
+    const { x, y, payload } = tickProps;
+    const { value, index } = payload;
+    const date = new Date(value);
+    const month = date.getMonth();
+    const year = date.getFullYear();
+    const showLabels = barDataByTime.length >= 4;
+    const section = Math.round(barDataByTime.length / 5);
+    const label1Index = section;
+    const label2Index = section * 2;
+    const label3Index = section * 3;
+    const label4Index = section * 4;
+
+    if (
+      [label1Index, label2Index, label3Index, label4Index].includes(index) &&
+      showLabels
+    ) {
+      return (
+        <text x={x} y={y - 4} textAnchor="middle">
+          {monthNames[month]} {year}
+        </text>
+      );
+    }
+
+    return <></>;
+  };
+
+  const formatWeekInterval = (date: string, nextDate?: string) => {
+    const endYear = nextDate ? nextDate.slice(0, 4) : date.slice(0, 4);
+    const startMonth = monthNames[new Date(date).getMonth()];
+    const startDay = date.slice(8, 10);
+    const endMonth = nextDate
+      ? monthNames[new Date(nextDate).getMonth()]
+      : undefined;
+    const endDay = nextDate ? nextDate.slice(8, 10) : undefined;
+
+    return nextDate
+      ? `${startMonth} ${startDay} - ${
+          endMonth !== startMonth ? `${endMonth} ` : ""
+        }${endDay}, ${endYear}`
+      : `${startMonth} ${startDay}, ${endYear} - present`;
+  };
+
+  const formatLabel = (data: any) => {
+    const index = barDataByTime.findIndex((entry) => entry.week == data);
+    const nextEntry =
+      dataByTime.length - 1 >= index ? dataByTime[index + 1]?.week : undefined;
+
+    return formatWeekInterval(data, nextEntry);
   };
 
   return (
@@ -306,7 +440,7 @@ const BreakdownModal = ({
       isOpen={isPointsBreakdownModalOpen}
       setIsOpen={setIsPointsBreakdownModalOpen}
     >
-      <div>
+      <div className="w-full">
         <div className="mb-12 flex items-center justify-between">
           <h1 className="text-2xl sm:text-4xl text-blue-800 font-semibold font-founders leading-relaxed">
             GMV <br />
@@ -334,8 +468,53 @@ const BreakdownModal = ({
             </>
           ) : (
             <div>
+              <div className="mb-8 min-w-[600px]">
+                <ResponsiveContainer height={250} width="100%">
+                  <ComposedChart width={730} height={250} data={barDataByTime}>
+                    <XAxis dataKey="week" tickFormatter={weekTickFormatter} />
+                    <XAxis
+                      dataKey="week"
+                      axisLine={false}
+                      tickLine={false}
+                      interval={0}
+                      tick={renderQuarterTick}
+                      height={1}
+                      scale="band"
+                      xAxisId="month"
+                    />
+                    <YAxis />
+                    <ChartTooltip labelFormatter={formatLabel} />
+                    <Legend />
+                   
+                    <Bar dataKey="gmv" barSize={50} fill="#082553" />
+                    <Line
+                      type="monotone"
+                      dataKey="cumulative gmv"
+                      stroke="#ff7300"
+                    />
+                  </ComposedChart>
+                </ResponsiveContainer>
+                <ResponsiveContainer height={250} width="100%">
+                  <BarChart width={730} height={250} data={barDataByRole}>
+                    <XAxis dataKey="role" label={{ fontSize: 14 }} />
+                    <YAxis />
+                    <ChartTooltip />
+                    <Legend />
+                    <Bar dataKey="gmv" fill="#082553" />
+                  </BarChart>
+                </ResponsiveContainer>
+                <ResponsiveContainer height={250} width="100%">
+                  <BarChart width={730} height={250} data={barDataByStrategy}>
+                    <XAxis dataKey="strategy" />
+                    <YAxis />
+                    <ChartTooltip />
+                    <Legend />
+                    <Bar dataKey="gmv" fill="#00433B" />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
               {data.map((entry, index) => (
-                <div className="" key={entry.txHash}>
+                <div className="" key={`${index}-${entry.txHash}`}>
                   <span className="text-grey-400 mr-2">
                     {index + 1}. {new Date(entry.timestamp).toDateString()}
                   </span>

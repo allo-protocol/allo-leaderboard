@@ -12,9 +12,18 @@ export async function GET(req: Request) {
 
     // Load SQL from a file
     const sql = loadQuery("getEvents.sql");
+    const sqlByRole = loadQuery("getEventsByRole.sql");
+    const sqlByTime = loadQuery("getEventsByTime.sql");
+    const sqlByStrategy = loadQuery("getEventsByStrategy.sql");
     // Run the SQL query
-    const data = await queryDatabase(sql, [lookupAddress, lookupEns]);
-    return NextResponse.json(data);
+    const [data, dataByRole, dataByStrategy, dataByTime] = await Promise.all([
+      queryDatabase(sql, [lookupAddress, lookupEns]),
+      queryDatabase(sqlByRole, [lookupAddress, lookupEns]),
+      queryDatabase(sqlByStrategy, [lookupAddress, lookupEns]),
+      queryDatabase(sqlByTime, [lookupAddress, lookupEns]),
+    ]);
+
+    return NextResponse.json({ data, dataByRole, dataByStrategy, dataByTime });
   } catch (error) {
     console.error("Database query error:", error);
     return NextResponse.json(
