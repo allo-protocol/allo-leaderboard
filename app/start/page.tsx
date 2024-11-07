@@ -7,7 +7,6 @@ import { useAccount } from "wagmi";
 import Pagination from "../components/pagination";
 import { formatNumber } from "../components/helpers";
 import {
-  getRoundStrategyType,
   LeaderboardFilter,
   LeaderboardItem,
   PointsBreakdownItem,
@@ -317,29 +316,46 @@ const BreakdownModal = ({
   const getActionFromRole = (role: Role) => {
     switch (role) {
       case Role.CONTRIBUTOR:
-        return "contributor";
+        return "Contributor";
       case Role.COTRACT_DEV:
-        return "contract dev";
+        return "Contract dev";
       case Role.GRANTEE:
-        return "grantee";
+        return "Grantee";
       case Role.ROUND_OPERATOR:
-        return "round operator";
+        return "Round operator";
       case Role.DONOR:
-        return "donor";
+        return "Donor";
       case Role.MANAGER:
-        return "manager";
+        return "Manager";
     }
   };
 
   const barDataByRole = dataByRole.map((entry) => ({
     role: getActionFromRole(entry.role),
-    gmv: entry.gmv,
+    gmv: Math.round(Number(entry.gmv)),
   }));
 
-  const barDataByStrategy = dataByStrategy.map((entry) => ({
-    strategy: getRoundStrategyType(entry.strategy_name),
-    gmv: entry.gmv,
-  }));
+  const barDataByStrategyMapByStrategy: Map<
+    string,
+    { strategy: string; gmv: number }
+  > = new Map();
+  dataByStrategy.forEach((entry) => {
+    if (barDataByStrategyMapByStrategy.has(entry.mapped_strategy)) {
+      const prevGmv =
+        barDataByStrategyMapByStrategy.get(entry.mapped_strategy)?.gmv ?? 0;
+      barDataByStrategyMapByStrategy.set(entry.mapped_strategy, {
+        strategy: entry.mapped_strategy,
+        gmv: Math.round(Number(prevGmv + entry.gmv)),
+      });
+    } else {
+      barDataByStrategyMapByStrategy.set(entry.mapped_strategy, {
+        strategy: entry.mapped_strategy,
+        gmv: Math.round(Number(entry.gmv)),
+      });
+    }
+  });
+  console.log(dataByStrategy);
+  const barDataByStrategy = Array.from(barDataByStrategyMapByStrategy.values());
 
   const monthNames = [
     "Jan",
@@ -454,26 +470,6 @@ const BreakdownModal = ({
             <div>
               <div className="mb-8 min-w-[600px]">
                 <ResponsiveContainer height={250} width="100%">
-                  <BarChart width={730} height={250} data={barDataByRole}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="role" label={{ fontSize: 14 }} />
-                    <YAxis />
-                    <ChartTooltip />
-                    <Legend />
-                    <Bar dataKey="gmv" fill="#082553"  />
-                  </BarChart>
-                </ResponsiveContainer>
-                <ResponsiveContainer height={250} width="100%">
-                  <BarChart width={730} height={250} data={barDataByStrategy}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="strategy" />
-                    <YAxis />
-                    <ChartTooltip />
-                    <Legend />
-                    <Bar dataKey="gmv" fill="#00433B" />
-                  </BarChart>
-                </ResponsiveContainer>
-                <ResponsiveContainer height={250} width="100%">
                   <ComposedChart width={730} height={250} data={barDataByTime}>
                     <XAxis dataKey="week" tickFormatter={weekTickFormatter} />
                     <XAxis
@@ -489,14 +485,32 @@ const BreakdownModal = ({
                     <YAxis />
                     <ChartTooltip labelFormatter={formatLabel} />
                     <Legend />
-                    <CartesianGrid stroke="#f5f5f5" />
-                    <Bar dataKey="gmv" barSize={20} fill="#082553" />
+                   
+                    <Bar dataKey="gmv" barSize={50} fill="#082553" />
                     <Line
                       type="monotone"
                       dataKey="cumulative gmv"
                       stroke="#ff7300"
                     />
                   </ComposedChart>
+                </ResponsiveContainer>
+                <ResponsiveContainer height={250} width="100%">
+                  <BarChart width={730} height={250} data={barDataByRole}>
+                    <XAxis dataKey="role" label={{ fontSize: 14 }} />
+                    <YAxis />
+                    <ChartTooltip />
+                    <Legend />
+                    <Bar dataKey="gmv" fill="#082553" />
+                  </BarChart>
+                </ResponsiveContainer>
+                <ResponsiveContainer height={250} width="100%">
+                  <BarChart width={730} height={250} data={barDataByStrategy}>
+                    <XAxis dataKey="strategy" />
+                    <YAxis />
+                    <ChartTooltip />
+                    <Legend />
+                    <Bar dataKey="gmv" fill="#00433B" />
+                  </BarChart>
                 </ResponsiveContainer>
               </div>
               {data.map((entry, index) => (
